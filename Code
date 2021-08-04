@@ -1,0 +1,47 @@
+#include <Servo.h>
+#include <Wire.h>
+#include <Wiichuck.h>
+
+Wiichuck chuck;
+Servo servo;
+int servo_position = 90;
+int servo_speed = 5;
+
+void setup() {
+  servo.attach(3);
+  chuck.init(0, 0);
+  chuck.calibrate();
+
+  Serial.begin(9600);
+}
+
+int moveservo(int x_axe) {
+  if(x_axe <= 50) {
+  servo_position = servo_position - servo_speed;
+  servo.write(servo_position);
+  }
+  else if(x_axe >= 200) {
+    servo_position = servo_position + servo_speed;
+    servo.write(servo_position);
+  }
+}
+
+void loop() {
+  int x_axe = chuck.joyX();
+  int y_axe = chuck.joyY();
+  int z_button = chuck.buttonZ();
+  int c_button = chuck.buttonC();
+  //servo.write(0);
+  if(chuck.poll()) {
+    
+  }
+  Serial.print("x: ");
+  Serial.print(x_axe);
+  Serial.print(" y: ");
+  Serial.print(y_axe);
+  Serial.print(chuck.buttonZ());
+  Serial.println("");
+  moveservo(x_axe);
+
+
+}
